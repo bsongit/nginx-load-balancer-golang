@@ -3,7 +3,7 @@
 This project demonstrates how to configure an **Nginx** reverse proxy to act as a load balancer for **three concurrent Golang backend servers**.
 
 
-![Project Diagram](https://levelup.gitconnected.com/nginx-the-underrated-load-balancer-that-might-already-be-running-in-your-stack-b56136301eb1)
+![Project Diagram](./diagram.png)
 ---
 
 ## System Architecture
