@@ -1,74 +1,34 @@
-# portifolio_web
-A Portfolio project which uses Reactjs, Typescript , NodeJs, and MongoCloud.
+# Nginx & Golang Round-Robin Load Balancer
+
+This project demonstrates how to configure an **Nginx** reverse proxy to act as a load balancer for **three concurrent Golang backend servers**.
 
 
-# Getting Started with Create React App
+![Project Diagram](https://levelup.gitconnected.com/nginx-the-underrated-load-balancer-that-might-already-be-running-in-your-stack-b56136301eb1)
+---
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## System Architecture
 
-## Available Scripts
+The architecture consists of one entry point (Nginx) listening on port 80 and distributing requests across three Go application instances.
 
-In the project directory, you can run:
+* **Load Balancer:** Nginx (Port 80)
+* **Backend Server 1:** Golang App (Port 8081)
+* **Backend Server 2:** Golang App (Port 8082)
+* **Backend Server 3:** Golang App (Port 8083)
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Load Balancing Algorithm: Round-Robin
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The project utilizes the default Nginx load balancing algorithm: **Round-Robin**.
 
-### `npm test`
+### How it Works
+* Requests are distributed **sequentially** and **cyclically** down the list of servers.
+* **Request 1:** Directed to Server 1 (Port 8081).
+* **Request 2:** Directed to Server 2 (Port 8082).
+* **Request 3:** Directed to Server 3 (Port 8083).
+* **Request 4:** Loops back to Server 1 (Port 8081).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Key Features
+* **Equal Distribution:** Every server handles an identical share of the total traffic.
+* **Stateless:** The proxy does not need to calculate server loads or response times.
+* **Automatic Failover:** If one Go server crashes, Nginx automatically skips it and routes traffic to the remaining healthy servers.
